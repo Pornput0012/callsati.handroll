@@ -1,27 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { cards } from "@/data/cards";
 import { CardTile } from "./CardTile";
+import { PickTransition } from "./PickTransition";
 
 export function CardGrid() {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [reversed, setReversed] = useState(false);
+  const reduce = useReducedMotion();
   const [picked, setPicked] = useState<string | null>(null);
 
   const q = query.trim().toLowerCase();
   const shown = cards.filter((c) => !q || c.name.toLowerCase().includes(q));
 
+  const path = (id: string) => `/reading/${id}${reversed ? "/reversed" : ""}`;
+  const go = useCallback(() => {
+    if (picked) router.push(path(picked));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [picked, reversed, router]);
+
   function pick(id: string) {
-    setPicked(id);
-    router.push(`/reading/${id}${reversed ? "/reversed" : ""}`);
+    if (picked) return; // กันกดซ้ำระหว่างเล่นแอนิเมชัน
+    router.prefetch(path(id));
+    if (reduce) router.push(path(id));
+    else setPicked(id);
   }
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 pb-10">
+      <AnimatePresence>
+        {picked && <PickTransition card={cards.find((c) => c.id === picked)!} reversed={reversed} onDone={go} />}
+      </AnimatePresence>
       <div className="sticky my-8 rounded-xl top-0 z-10 -mx-4 flex flex-col gap-3 bg-background/90 px-4 py-4 backdrop-blur">
         <input
           type="search"

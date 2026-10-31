@@ -25,3 +25,17 @@ describe("getReading", () => {
     expect(getReading("nope")).toBeUndefined();
   });
 });
+
+describe("fortunes", () => {
+  it("ทุกใบ ทั้งสองท่า มีคำทำนายครบ 4 หมวด และดาว 1–5", () => {
+    for (const c of cards) {
+      for (const f of [c.upright, c.reversed]) {
+        for (const text of [f.general, f.work, f.money, f.love]) {
+          expect(text.trim().length).toBeGreaterThan(10);
+          expect(text).not.toMatch(/TODO/);
+        }
+        for (const s of Object.values(f.stars)) expect(s >= 1 && s <= 5).toBe(true);
+      }
+    }
+  });
+});

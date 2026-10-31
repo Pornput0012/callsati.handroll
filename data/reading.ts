@@ -22,5 +22,5 @@ export function getReading(cardId: string, reversed = false): Reading | undefine
         ? "วันนี้ใจอาจเหนื่อย ขอซอสนุ่มๆ ไว้ปลอบใจ"
         : "ดวงกลางๆ ได้ซอสกลมกล่อมไว้เป็นกำลังใจ";
 
-  return { card, reversed, tone, character, sauce, message: reversed ? card.reversed : card.upright, reason };
+  return { card, reversed, tone, character, sauce, fortune: reversed ? card.reversed : card.upright, reason };
 }

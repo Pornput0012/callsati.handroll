@@ -1,6 +1,16 @@
 export type Tone = "good" | "neutral" | "bad";
 export type SauceKind = "warning" | "comfort";
 
+export type Stars = 1 | 2 | 3 | 4 | 5;
+
+export type Fortune = {
+  general: string;
+  work: string;
+  money: string;
+  love: string;
+  stars: { work: Stars; money: Stars; love: Stars };
+};
+
 export type Card = {
   id: string;
   number: number;
@@ -9,8 +19,8 @@ export type Card = {
   keywords: string[];
   // TODO(เจ้าของร้าน): รีวิวคะแนน -2 (แย่มาก) ถึง 2 (ดีมาก)
   score: -2 | -1 | 0 | 1 | 2;
-  upright: string;
-  reversed: string;
+  upright: Fortune;
+  reversed: Fortune;
 };
 
 export type Character = {
@@ -37,6 +47,6 @@ export type Reading = {
   tone: Tone;
   character: Character;
   sauce: Sauce;
-  message: string;
+  fortune: Fortune;
   reason: string;
 };
