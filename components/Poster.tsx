@@ -1,0 +1,53 @@
+import type { Reading } from "@/data/types";
+import { CardFace } from "./art/CardFace";
+
+export const POSTER_W = 1080;
+export const POSTER_H = 1920;
+const SAFE = 250; // เว้นพื้นที่ UI ของ IG story ด้านบน/ล่าง
+
+// ภาพ character จริง (character.image) จะเพิ่มทีหลังเมื่อมีภาพจากเจ้าของร้าน
+const STARS = Array.from({ length: 40 }, (_, i) => ({ x: (i * 137) % 1000 + 40, y: (i * 251) % 1700 + 100, r: 3 + (i % 4) * 2 }));
+
+export function Poster({ reading }: { reading: Reading }) {
+  const { card, character, sauce, message, reversed, reason } = reading;
+  return (
+    <div
+      style={{
+        width: POSTER_W,
+        height: POSTER_H,
+        padding: `${SAFE}px 80px`,
+        background: `linear-gradient(160deg, ${character.color} 0%, #140a24 70%)`,
+        color: "#f6ecff",
+        fontFamily: "var(--font-noto-thai), sans-serif",
+      }}
+      className="relative flex flex-col items-center justify-between overflow-hidden text-center"
+    >
+      {STARS.map((st, i) => (
+        <span key={i} style={{ position: "absolute", left: st.x, top: st.y, width: st.r, height: st.r, borderRadius: "50%", background: "#f2c14e", opacity: 0.5 }} />
+      ))}
+      <p style={{ fontSize: 40, letterSpacing: 6, color: "#f2c14e" }}>YOUR TAROT CHARACTER</p>
+
+      <div className="flex flex-col items-center" style={{ gap: 28 }}>
+        <div style={{ width: 340, transform: reversed ? "rotate(180deg)" : undefined, filter: "drop-shadow(0 0 40px rgba(242,193,78,0.5))" }}>
+          <CardFace card={card} className="block h-auto w-full" />
+        </div>
+        <p style={{ fontSize: 56 }}>
+          {card.name}
+          {reversed ? " (Reversed)" : ""}
+        </p>
+        <h1 style={{ fontSize: 96, fontWeight: 700, lineHeight: 1.2 }}>{character.name}</h1>
+        <p style={{ fontSize: 44, color: "#f2c14e" }}>{character.tagline}</p>
+      </div>
+
+      <p style={{ fontSize: 42, lineHeight: 1.55, maxHeight: 420, overflow: "hidden" }}>{message}</p>
+
+      <div
+        style={{ width: "100%", padding: "36px 40px", borderRadius: 40, background: "rgba(0,0,0,0.35)", border: `6px solid ${sauce.color}` }}
+      >
+        <p style={{ fontSize: 34, opacity: 0.7 }}>ซอสประจำตัวของคุณ</p>
+        <p style={{ fontSize: 72, fontWeight: 700, color: sauce.color === "#6f4518" ? "#d9a066" : sauce.color }}>{sauce.name}</p>
+        <p style={{ fontSize: 36 }}>{reason}</p>
+      </div>
+    </div>
+  );
+}
