@@ -7,6 +7,7 @@ const ROMAN = ["0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
 export function CardFace({ card, className }: { card: Card; className?: string }) {
   const Symbol = symbols[card.id] ?? FallbackSymbol;
   const gid = `bg-${card.id}`;
+  const name = card.name.toUpperCase();
   return (
     <svg viewBox="0 0 200 300" role="img" aria-label={card.name} className={className}>
       <defs>
@@ -25,8 +26,18 @@ export function CardFace({ card, className }: { card: Card; className?: string }
       </text>
       <Symbol />
       <line x1="50" y1="252" x2="150" y2="252" stroke="#f2c14e" strokeWidth="1" opacity="0.6" />
-      <text x="100" y="274" textAnchor="middle" fontSize="13" fill="#f6ecff" fontFamily="serif" letterSpacing="1.5">
-        {card.name.toUpperCase()}
+      <text
+        x="100"
+        y="274"
+        textAnchor="middle"
+        fontSize={name.length > 14 ? 10 : 13}
+        fill="#f6ecff"
+        fontFamily="serif"
+        letterSpacing={name.length > 14 ? 0.5 : 1.5}
+        textLength={name.length > 18 ? 160 : undefined}
+        lengthAdjust="spacingAndGlyphs"
+      >
+        {name}
       </text>
     </svg>
   );

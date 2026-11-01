@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { cards } from "@/data/cards";
@@ -13,6 +13,9 @@ export function CardGrid() {
   const [reversed, setReversed] = useState(false);
   const reduce = useReducedMotion();
   const [picked, setPicked] = useState<string | null>(null);
+
+  // cacheComponents เก็บหน้า /pick ไว้ตอนออกไปหน้าอื่น (Activity) → ล้างไพ่ที่เลือกเมื่อหน้าถูกซ่อน กันแอนิเมชันเล่นซ้ำตอนกลับมา
+  useEffect(() => () => setPicked(null), []);
 
   const q = query.trim().toLowerCase();
   const shown = cards.filter((c) => !q || c.name.toLowerCase().includes(q));
