@@ -47,8 +47,20 @@ export function CardGrid() {
           aria-label="ค้นหาชื่อไพ่"
           className="w-full rounded-full border border-white/20 bg-white/10 px-4 py-2 outline-none focus:border-gold"
         />
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={reversed} onChange={(e) => setReversed(e.target.checked)} />
+        <label className="flex cursor-pointer items-center gap-3 text-sm">
+          <input
+            type="checkbox"
+            role="switch"
+            checked={reversed}
+            onChange={(e) => setReversed(e.target.checked)}
+            className="peer sr-only"
+          />
+          <span
+            aria-hidden
+            className="relative h-6 w-11 shrink-0 rounded-full bg-white/20 transition-colors peer-checked:bg-gold peer-focus-visible:ring-2 peer-focus-visible:ring-gold peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background peer-checked:[&>span]:translate-x-5"
+          >
+            <span className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform" />
+          </span>
           ไพ่ที่ได้เป็นท่ากลับหัว
         </label>
       </div>
