@@ -1,11 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { cards } from "@/data/cards";
 import { CardTile } from "./CardTile";
 import { PickTransition } from "./PickTransition";
+import { playCardSelect, playTap } from "@/lib/sound";
 
 export function CardGrid() {
   const router = useRouter();
@@ -28,31 +30,41 @@ export function CardGrid() {
 
   function pick(id: string) {
     if (picked) return; // กันกดซ้ำระหว่างเล่นแอนิเมชัน
+    playCardSelect();
     router.prefetch(path(id));
     if (reduce) router.push(path(id));
     else setPicked(id);
   }
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 pb-10">
+    <div className="mx-auto w-full max-w-3xl md:max-w-5xl px-4 pb-12">
       <AnimatePresence>
         {picked && <PickTransition card={cards.find((c) => c.id === picked)!} reversed={reversed} onDone={go} />}
       </AnimatePresence>
-      <div className="sticky my-8 rounded-xl top-0 z-10 -mx-4 flex flex-col gap-3 bg-background/90 px-4 py-4 backdrop-blur">
+      <div className="sticky my-6 md:my-8 rounded-2xl top-2 z-10 -mx-2 md:-mx-4 flex flex-col gap-3 border border-white/10 bg-background/90 px-4 md:px-6 py-4 shadow-xl shadow-black/40 backdrop-blur-md">
+        <div className="flex items-center justify-between text-xs md:text-sm text-foreground/70">
+          <span className="font-medium text-gold/90">โหมดเลือกจากไพ่จริง</span>
+          <Link href="/play" className="text-gold transition-colors hover:underline">
+            ← เปลี่ยนวิธีดูดวง
+          </Link>
+        </div>
         <input
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search card name"
+          placeholder="ค้นหาชื่อไพ่ (เช่น The Fool, The Sun...)"
           aria-label="ค้นหาชื่อไพ่"
-          className="w-full rounded-full border border-white/20 bg-white/10 px-4 py-2 outline-none focus:border-gold"
+          className="w-full rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm md:text-base outline-none transition-colors focus:border-gold focus:ring-1 focus:ring-gold"
         />
-        <label className="flex cursor-pointer items-center gap-3 text-sm">
+        <label className="flex cursor-pointer items-center gap-3 text-sm md:text-base">
           <input
             type="checkbox"
             role="switch"
             checked={reversed}
-            onChange={(e) => setReversed(e.target.checked)}
+            onChange={(e) => {
+              playTap();
+              setReversed(e.target.checked);
+            }}
             className="peer sr-only"
           />
           <span
@@ -61,11 +73,11 @@ export function CardGrid() {
           >
             <span className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform" />
           </span>
-          ไพ่ที่ได้เป็นท่ากลับหัว
+          ไพ่ที่ได้เป็นท่ากลับหัว (Reversed)
         </label>
       </div>
-      {shown.length === 0 && <p className="py-10 text-center text-foreground/60">ไม่พบไพ่ที่ค้นหา</p>}
-      <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
+      {shown.length === 0 && <p className="py-12 text-center text-foreground/60">ไม่พบไพ่ที่ค้นหา</p>}
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 md:gap-4">
         {shown.map((card, i) => (
           <motion.button
             key={card.id}
@@ -74,9 +86,13 @@ export function CardGrid() {
             aria-label={`เลือกไพ่ ${card.name}`}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: Math.min(i * 0.03, 0.5) }}
-            whileHover={{ y: -4 }}
+            transition={{
+              opacity: { duration: 0.35, delay: Math.min(i * 0.02, 0.4) },
+              y: { type: "spring", stiffness: 200, damping: 22 },
+            }}
+            whileHover={{ y: -6, scale: 1.02 }}
             whileTap={{ scale: 0.96 }}
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-xl"
           >
             <CardTile card={card} selected={picked === card.id} />
           </motion.button>

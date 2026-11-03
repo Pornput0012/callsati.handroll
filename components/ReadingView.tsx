@@ -51,8 +51,11 @@ export function ReadingView({ cardId, reversed: flip }: { cardId: string; revers
       </Reveal>
 
       <Reveal delay={4.6}>
-        <Link href="/pick" className="text-sm text-gold underline">
-          เลือกไพ่ใหม่
+        <Link
+          href="/play"
+          className="inline-block rounded-full border border-gold/40 px-6 py-2 text-sm font-medium text-gold transition-colors hover:border-gold hover:bg-gold/10"
+        >
+          เล่นใหม่
         </Link>
       </Reveal>
     </main>

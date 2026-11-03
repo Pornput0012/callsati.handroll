@@ -32,6 +32,14 @@ body {
 .art-bob { animation: art-bob 2.4s ease-in-out infinite; }
 .art-flash { animation: art-flash 3s ease-in-out infinite; }
 .art-twinkle { animation: art-twinkle 2s ease-in-out infinite; }
+/* The Fool เดินตอนโหลด: ขา/ตัวเด้งเป็นจังหวะก้าว (0.7 วิ/ก้าว) พื้นเลื่อนซ้ายให้ดูเหมือนเดินไปข้างหน้า */
+@keyframes fool-step { 0%, 100% { transform: rotate(-26deg); } 50% { transform: rotate(26deg); } }
+@keyframes fool-hop { 0%, 50%, 100% { transform: translateY(0); } 25%, 75% { transform: translateY(-3px); } }
+@keyframes fool-ground { to { transform: translateX(-48px); } }
+.fool-leg { animation: fool-step 0.7s ease-in-out infinite; }
+.fool-leg-b { animation-delay: -0.35s; }
+.fool-hop { animation: fool-hop 0.7s ease-in-out infinite; }
+.fool-ground { animation: fool-ground 0.7s linear infinite; }
 @media (prefers-reduced-motion: reduce) {
-  .art-spin, .art-bob, .art-flash, .art-twinkle { animation: none; }
+  .art-spin, .art-bob, .art-flash, .art-twinkle, .fool-leg, .fool-hop, .fool-ground { animation: none; }
 }
